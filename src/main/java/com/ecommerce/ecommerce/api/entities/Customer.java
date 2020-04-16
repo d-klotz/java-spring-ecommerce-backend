@@ -20,16 +20,6 @@ public class Customer {
     private PaymentMethod mainPaymentMethod;
     private List<Order> orderList;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "main_payment_method")
-    public PaymentMethod getMainPaymentMethod() {
-        return mainPaymentMethod;
-    }
-
-    public void setMainPaymentMethod(PaymentMethod mainPaymentMethod) {
-        this.mainPaymentMethod = mainPaymentMethod;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -48,6 +38,7 @@ public class Customer {
         this.name = name;
     }
 
+    @Enumerated(EnumType.STRING)
     public Profile getProfile() {
         return profile;
     }
@@ -103,4 +94,15 @@ public class Customer {
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "main_payment_method")
+    public PaymentMethod getMainPaymentMethod() {
+        return mainPaymentMethod;
+    }
+
+    public void setMainPaymentMethod(PaymentMethod mainPaymentMethod) {
+        this.mainPaymentMethod = mainPaymentMethod;
+    }
+
 }
