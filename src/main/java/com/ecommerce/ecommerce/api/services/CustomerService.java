@@ -10,4 +10,6 @@ public interface CustomerService {
      * @return new customer data
      */
  Customer createCustomer(Customer customer);
+
+ Customer getCustomerById(Long id);
 }

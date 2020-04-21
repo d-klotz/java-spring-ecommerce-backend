@@ -7,12 +7,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "order")
 public class Order {
 
     private int Id;
     private List<OrderItem> orderItem;
-    private int quantity;
     private Customer customer;
     private PaymentMethod paymentMethod;
     private ShippingMethod shippingMethod;
@@ -25,14 +24,6 @@ public class Order {
 
     public void setId(int id) {
         Id = id;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)

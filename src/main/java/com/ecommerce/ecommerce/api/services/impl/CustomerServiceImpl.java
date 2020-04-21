@@ -21,4 +21,10 @@ public class CustomerServiceImpl implements CustomerService {
         log.info("Saving customer {}", customer);
         return this.customerRepository.save(customer);
     }
+
+    @Override
+    public Customer getCustomerById(Long id) {
+        log.info("Getting customer by id {}", id);
+        return this.customerRepository.getOne(id);
+    }
 }
