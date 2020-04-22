@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +55,21 @@ public class OrderController {
       OrderDto createdOrderDto = convertoOrderToOrderDto(createdOrder);
 
       return ResponseEntity.ok(createdOrderDto);
+    }
+
+    @GetMapping(value="customer/{id}")
+    public ResponseEntity<List<OrderDto>> getOrdersByCustomerId(@PathVariable("id")  Long id) {
+        List<Order> orders = this.orderService.getOrdersByCustomerId(id);
+        List<OrderDto> orderDtos = new ArrayList<>();
+        orders.forEach(order -> orderDtos.add(convertoOrderToOrderDto(order)));
+        return ResponseEntity.ok(orderDtos);
+    }
+
+    @GetMapping(value="/{id}")
+    public ResponseEntity<OrderDto> getOrdersById(@PathVariable("id")  Long id) {
+        Order order = this.orderService.getOrderById(id);
+        OrderDto orderDto = convertoOrderToOrderDto(order);
+        return ResponseEntity.ok(orderDto);
     }
 
     private double calculateTotalAmount(OrderDto orderDto) {

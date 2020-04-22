@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -20,5 +22,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Order order) {
         return orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> getOrdersByCustomerId(Long id) {
+        return this.orderRepository.findByCustomerId(id);
+    }
+
+    @Override
+    public Order getOrderById(Long id) {
+        return this.orderRepository.getOne(id);
     }
 }
