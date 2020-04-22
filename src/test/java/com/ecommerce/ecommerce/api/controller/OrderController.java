@@ -81,7 +81,7 @@ public class OrderController {
         order.getCustomer().setId(1L);
         order.setPaymentMethod(PAYMENT_METHOD);
         order.setShippingMethod(SHIPPING_METHOD);
-        order.setOrderItem(ORDER_ITEMS);
+//        order.setOrderItem(ORDER_ITEMS);
         return order;
     }
 

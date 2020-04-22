@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -13,18 +14,18 @@ import javax.persistence.Table;
 @Table(name = "order_item")
 public class OrderItem {
 
-    private int id;
+    private Long id;
     private int quantity;
     private Product product;
     private Order order;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,6 +47,7 @@ public class OrderItem {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id", nullable = false )
     public Order getOrder() {
         return order;
     }

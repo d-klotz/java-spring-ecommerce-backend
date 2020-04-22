@@ -7,10 +7,10 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
 
-    private int Id;
+    private Long Id;
     private List<OrderItem> orderItem;
     private Customer customer;
     private PaymentMethod paymentMethod;
@@ -18,11 +18,11 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public int getId() {
+    public Long getId() {
         return Id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         Id = id;
     }
 
@@ -35,7 +35,7 @@ public class Order {
         this.customer = customer;
     }
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     public List<OrderItem> getOrderItem() {
         return orderItem;
     }

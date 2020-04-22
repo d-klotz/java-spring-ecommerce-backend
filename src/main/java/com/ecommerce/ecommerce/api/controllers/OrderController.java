@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/order")
@@ -43,13 +44,36 @@ public class OrderController {
     OrderItemService orderItemService;
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderDto orderDto) {
+    public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody OrderDto orderDto) {
       log.info("Creating order {}", orderDto);
       Order order = convertOrderDtoToOrder(orderDto);
-      this.orderService.createOrder(order);
 
+      Order createdOrder = this.orderService.createOrder(order);
+      OrderDto createdOrderDto = convertoOrderToOrderDto(createdOrder);
 
-      return ResponseEntity.ok(order);
+      return ResponseEntity.ok(createdOrderDto);
+    }
+
+    private OrderDto convertoOrderToOrderDto(Order order) {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setId(Optional.of(order.getId()));
+        orderDto.setCustomerId(order.getCustomer().getId());
+        orderDto.setOrderItems(convertoOrderItemToOrderItemDto(order.getOrderItem()));
+        orderDto.setPaymentMethod(order.getPaymentMethod());
+        orderDto.setShippingMethod(order.getShippingMethod());
+        return orderDto;
+    }
+
+    private List<OrderItemDto> convertoOrderItemToOrderItemDto(List<OrderItem> orderItems) {
+        List<OrderItemDto> orderItemDtos = new ArrayList<>();
+        orderItems.forEach(orderItem -> {
+            OrderItemDto orderItemDto = new OrderItemDto();
+            orderItemDto.setId(Optional.of(orderItem.getId()));
+            orderItemDto.setProductId(orderItem.getProduct().getId());
+            orderItemDto.setQuantity(orderItem.getQuantity());
+            orderItemDtos.add(orderItemDto);
+        });
+        return orderItemDtos;
     }
 
     private Order convertOrderDtoToOrder(OrderDto orderDto) {
@@ -57,17 +81,17 @@ public class OrderController {
         order.setCustomer(customerService.getCustomerById(orderDto.getCustomerId()));
         order.setShippingMethod(orderDto.getShippingMethod());
         order.setPaymentMethod(orderDto.getPaymentMethod());
-        order.setOrderItem(convertOrderItemsDtoToOrdemItems(orderDto.getOrderItems()));
+        order.setOrderItem(convertOrderItemsDtoToOrdemItems(orderDto.getOrderItems(), order));
         return order;
     }
 
-    private List<OrderItem> convertOrderItemsDtoToOrdemItems(List<OrderItemDto> orderItemsDto) {
+    private List<OrderItem> convertOrderItemsDtoToOrdemItems(List<OrderItemDto> orderItemsDto, Order order) {
         List<OrderItem> orderItemList = new ArrayList<>();
         orderItemsDto.forEach(orderItemDto -> {
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(productService.getProductById(orderItemDto.getProductId()));
             orderItem.setQuantity(orderItemDto.getQuantity());
-//            orderItem.setId(this.orderItemService.createOrderItem(orderItem).getId());
+            orderItem.setOrder(order);
             orderItemList.add(orderItem);
         });
         return orderItemList;

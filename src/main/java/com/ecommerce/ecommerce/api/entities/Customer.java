@@ -18,7 +18,7 @@ public class Customer {
     private Date lastUpdateDate;
     private Profile profile;
     private PaymentMethod mainPaymentMethod;
-    private List<Order> orderList;
+    private List<Order> orders;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -86,13 +86,12 @@ public class Customer {
     }
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Column(name = "orders")
-    public List<Order> getOrderList() {
-        return orderList;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setOrderList(List<Order> orderList) {
-        this.orderList = orderList;
+    public void setOrders(List<Order> orderList) {
+        this.orders = orderList;
     }
 
     @Enumerated(EnumType.STRING)
