@@ -3,6 +3,7 @@ package com.ecommerce.ecommerce.api.dto;
 import com.ecommerce.ecommerce.api.enums.PaymentMethod;
 import com.ecommerce.ecommerce.api.enums.ShippingMethod;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ public class OrderDto {
     private List<OrderItemDto> orderItems;
     private PaymentMethod paymentMethod;
     private ShippingMethod shippingMethod;
+    private Optional<Date> creationDate = Optional.empty();
 
     public Optional<Long> getId() {
         return id;
@@ -52,5 +54,13 @@ public class OrderDto {
 
     public void setShippingMethod(ShippingMethod shippingMethod) {
         this.shippingMethod = shippingMethod;
+    }
+
+    public Optional<Date> getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Optional<Date> creationDate) {
+        this.creationDate = creationDate;
     }
 }

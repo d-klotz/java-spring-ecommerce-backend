@@ -12,6 +12,8 @@ CREATE TABLE `orders` (
   `id` bigint(20) NOT NULL,
   `customer_id` bigint(20)  NOT NULL,
   `shipping_method` varchar(50) NOT NULL,
+  `creation_date` datetime NOT NULL,
+  `total_amount` decimal(19,2) NOT NULL,
   `payment_method` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

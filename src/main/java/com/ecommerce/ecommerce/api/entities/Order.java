@@ -4,6 +4,7 @@ import com.ecommerce.ecommerce.api.enums.PaymentMethod;
 import com.ecommerce.ecommerce.api.enums.ShippingMethod;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,8 @@ public class Order {
     private Customer customer;
     private PaymentMethod paymentMethod;
     private ShippingMethod shippingMethod;
+    private double totalAmount;
+    private Date creationDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,5 +63,29 @@ public class Order {
 
     public void setShippingMethod(ShippingMethod shippingMethod) {
         this.shippingMethod = shippingMethod;
+    }
+
+    @Column(name = "creation_date")
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        final Date date = new Date();
+        creationDate = date;
+    }
+
+    @Column(name = "total_amount")
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

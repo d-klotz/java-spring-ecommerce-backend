@@ -14,7 +14,7 @@ public class Product {
     private String name;
     private String description;
     private String mainImage;
-    private int price;
+    private double price;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,11 +50,11 @@ public class Product {
         this.mainImage = mainImage;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
