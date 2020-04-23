@@ -3,6 +3,7 @@ package com.ecommerce.ecommerce.api.controllers;
 import com.ecommerce.ecommerce.api.dto.CustomerDto;
 import com.ecommerce.ecommerce.api.entities.Customer;
 import com.ecommerce.ecommerce.api.services.CustomerService;
+import com.ecommerce.ecommerce.api.utils.PasswordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class CustomerController {
         customer.setName(customerDto.getName());
         customer.setProfile(customerDto.getProfile());
         customer.setEmail(customerDto.getEmail());
+        customer.setPassword(PasswordUtils.generateBCrypt(customerDto.getPassword()));
         customer.setMainPaymentMethod(customerDto.getMainPaymentMethod());
         return customer;
     }

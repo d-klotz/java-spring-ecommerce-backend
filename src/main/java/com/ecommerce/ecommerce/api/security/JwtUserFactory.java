@@ -1,13 +1,12 @@
-package com.klotz.intelliponto.api.security;
+package com.ecommerce.ecommerce.api.security;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.ecommerce.ecommerce.api.entities.Customer;
+import com.ecommerce.ecommerce.api.enums.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import com.klotz.intelliponto.api.entities.Funcionario;
-import com.klotz.intelliponto.api.enums.PerfilEnum;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JwtUserFactory {
 
@@ -15,25 +14,25 @@ public class JwtUserFactory {
 	}
 
 	/**
-	 * Converte e gera um JwtUser com base nos dados de um funcionário.
+	 * Converts and generates a JwtUser based on a customer
 	 * 
-	 * @param funcionario
+	 * @param customer
 	 * @return JwtUser
 	 */
-	public static JwtUser create(Funcionario funcionario) {
-		return new JwtUser(funcionario.getId(), funcionario.getEmail(), funcionario.getSenha(),
-				mapToGrantedAuthorities(funcionario.getPerfil()));
+	public static JwtUser create(Customer customer) {
+		return new JwtUser(customer.getId(), customer.getEmail(), customer.getPassword(),
+				mapToGrantedAuthorities(customer.getProfile()));
 	}
 
 	/**
-	 * Converte o perfil do usuário para o formato utilizado pelo Spring Security.
+	 * Converts the user profile to the format used by Spring Security
 	 * 
-	 * @param perfilEnum
+	 * @param profile
 	 * @return List<GrantedAuthority>
 	 */
-	private static List<GrantedAuthority> mapToGrantedAuthorities(PerfilEnum perfilEnum) {
+	private static List<GrantedAuthority> mapToGrantedAuthorities(Profile profile) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		authorities.add(new SimpleGrantedAuthority(perfilEnum.toString()));
+		authorities.add(new SimpleGrantedAuthority(profile.toString()));
 		return authorities;
 	}
 

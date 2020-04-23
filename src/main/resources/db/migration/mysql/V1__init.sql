@@ -2,6 +2,7 @@ CREATE TABLE `customer` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `creation_date` datetime NOT NULL,
   `last_update_date` datetime NOT NULL,
   `profile` varchar(50) NOT NULL,

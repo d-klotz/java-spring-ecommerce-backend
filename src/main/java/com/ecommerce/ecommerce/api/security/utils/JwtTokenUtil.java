@@ -1,16 +1,15 @@
-package com.klotz.intelliponto.api.security.utils;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+package com.ecommerce.ecommerce.api.security.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtTokenUtil {
@@ -27,7 +26,7 @@ public class JwtTokenUtil {
 	private Long expiration;
 
 	/**
-	 * Obtém o username (email) contido no token JWT.
+	 * Gets the e-mail inside a JWT Token.
 	 * 
 	 * @param token
 	 * @return String
@@ -44,7 +43,7 @@ public class JwtTokenUtil {
 	}
 
 	/**
-	 * Retorna a data de expiração de um token JWT.
+	 * Returns the expiration date from a JWT token.
 	 * 
 	 * @param token
 	 * @return Date
@@ -61,7 +60,7 @@ public class JwtTokenUtil {
 	}
 
 	/**
-	 * Cria um novo token (refresh).
+	 * Refreshes a JWT token
 	 * 
 	 * @param token
 	 * @return String
@@ -71,7 +70,7 @@ public class JwtTokenUtil {
 		try {
 			Claims claims = getClaimsFromToken(token);
 			claims.put(CLAIM_KEY_CREATED, new Date());
-			refreshedToken = gerarToken(claims);
+			refreshedToken = generateToken(claims);
 		} catch (Exception e) {
 			refreshedToken = null;
 		}
@@ -79,33 +78,32 @@ public class JwtTokenUtil {
 	}
 
 	/**
-	 * Verifica e retorna se um token JWT é válido.
-	 * 
+	 * Checks if JWT token is valid
+	 *
 	 * @param token
 	 * @return boolean
 	 */
-	public boolean tokenValido(String token) {
-		return !tokenExpirado(token);
+	public boolean isTokenValid(String token) {
+		return !tokenExpired(token);
 	}
 
 	/**
-	 * Retorna um novo token JWT com base nos dados do usuários.
+	 * Returns a new JWT token based on the user data.
 	 * 
 	 * @param userDetails
 	 * @return String
 	 */
-	public String obterToken(UserDetails userDetails) {
+	public String getToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
 		userDetails.getAuthorities().forEach(authority -> claims.put(CLAIM_KEY_ROLE, authority.getAuthority()));
 		claims.put(CLAIM_KEY_CREATED, new Date());
 
-		return gerarToken(claims);
+		return generateToken(claims);
 	}
 
 	/**
-	 * Realiza o parse do token JWT para extrair as informações contidas no
-	 * corpo dele.
+	 * Parses the JWT token to extract the data (claims)
 	 * 
 	 * @param token
 	 * @return Claims
@@ -121,36 +119,36 @@ public class JwtTokenUtil {
 	}
 
 	/**
-	 * Retorna a data de expiração com base na data atual.
+	 * Returns a expiration date based on the actual date
 	 * 
 	 * @return Date
 	 */
-	private Date gerarDataExpiracao() {
+	private Date generateExpirationDate() {
 		return new Date(System.currentTimeMillis() + expiration * 1000);
 	}
 
 	/**
-	 * Verifica se um token JTW está expirado.
+	 * Verifies if a JWT token is expired
 	 * 
 	 * @param token
 	 * @return boolean
 	 */
-	private boolean tokenExpirado(String token) {
-		Date dataExpiracao = this.getExpirationDateFromToken(token);
-		if (dataExpiracao == null) {
+	private boolean tokenExpired(String token) {
+		Date expirationDate = this.getExpirationDateFromToken(token);
+		if (expirationDate == null) {
 			return false;
 		}
-		return dataExpiracao.before(new Date());
+		return expirationDate.before(new Date());
 	}
 
 	/**
-	 * Gera um novo token JWT contendo os dados (claims) fornecidos.
+	 * Generates a new JWT token containing the supplied data (claims)
 	 * 
 	 * @param claims
 	 * @return String
 	 */
-	private String gerarToken(Map<String, Object> claims) {
-		return Jwts.builder().setClaims(claims).setExpiration(gerarDataExpiracao())
+	private String generateToken(Map<String, Object> claims) {
+		return Jwts.builder().setClaims(claims).setExpiration(generateExpirationDate())
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 

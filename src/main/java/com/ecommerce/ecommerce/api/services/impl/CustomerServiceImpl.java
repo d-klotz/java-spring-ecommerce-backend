@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -26,5 +28,10 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getCustomerById(Long id) {
         log.info("Getting customer by id {}", id);
         return this.customerRepository.getOne(id);
+    }
+
+    @Override
+    public Optional<Customer> getCustomerByEmail(String email) {
+        return this.customerRepository.findByEmail(email);
     }
 }

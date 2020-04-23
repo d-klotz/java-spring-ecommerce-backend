@@ -1,9 +1,9 @@
-package com.klotz.intelliponto.api.security;
-
-import java.util.Collection;
+package com.ecommerce.ecommerce.api.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 public class JwtUser implements UserDetails {
 

@@ -1,4 +1,4 @@
-package com.klotz.intelliponto.api.security.dto;
+package com.ecommerce.ecommerce.api.security.dto;
 
 public class TokenDto {
 

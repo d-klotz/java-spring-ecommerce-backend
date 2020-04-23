@@ -1,10 +1,9 @@
-package com.klotz.intelliponto.api.security.controllers;
+package com.ecommerce.ecommerce.api.security.controllers;
 
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.ecommerce.ecommerce.api.response.Response;
+import com.ecommerce.ecommerce.api.security.dto.JwtAuthenticationDto;
+import com.ecommerce.ecommerce.api.security.dto.TokenDto;
+import com.ecommerce.ecommerce.api.security.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.klotz.intelliponto.api.response.Response;
-import com.klotz.intelliponto.api.security.dto.JwtAuthenticationDto;
-import com.klotz.intelliponto.api.security.dto.TokenDto;
-import com.klotz.intelliponto.api.security.utils.JwtTokenUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -47,7 +45,7 @@ public class AuthenticationController {
 	private UserDetailsService userDetailsService;
 
 	/**
-	 * Gera e retorna um novo token JWT.
+	 * Generates and returns a new JWT Token.
 	 * 
 	 * @param authenticationDto
 	 * @param result
@@ -61,32 +59,32 @@ public class AuthenticationController {
 		Response<TokenDto> response = new Response<TokenDto>();
 
 		if (result.hasErrors()) {
-			log.error("Erro validando lançamento: {}", result.getAllErrors());
+			log.error("Error found: {}", result.getAllErrors());
 			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
 			return ResponseEntity.badRequest().body(response);
 		}
 
-		log.info("Gerando token para o email {}.", authenticationDto.getEmail());
+		log.info("Generating token for e-mail {}.", authenticationDto.getEmail());
 		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-				authenticationDto.getEmail(), authenticationDto.getSenha()));
+				authenticationDto.getEmail(), authenticationDto.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationDto.getEmail());
-		String token = jwtTokenUtil.obterToken(userDetails);
+		String token = jwtTokenUtil.getToken(userDetails);
 		response.setData(new TokenDto(token));
 
 		return ResponseEntity.ok(response);
 	}
 
 	/**
-	 * Gera um novo token com uma nova data de expiração.
+	 * Generates a new token with a new expiration time.
 	 * 
 	 * @param request
 	 * @return ResponseEntity<Response<TokenDto>>
 	 */
 	@PostMapping(value = "/refresh")
 	public ResponseEntity<Response<TokenDto>> gerarRefreshTokenJwt(HttpServletRequest request) {
-		log.info("Gerando refresh token JWT.");
+		log.info("Generating refresh JWT token.");
 		Response<TokenDto> response = new Response<TokenDto>();
 		Optional<String> token = Optional.ofNullable(request.getHeader(TOKEN_HEADER));
 		
@@ -95,9 +93,9 @@ public class AuthenticationController {
         }
 		
 		if (!token.isPresent()) {
-			response.getErrors().add("Token não informado.");
-		} else if (!jwtTokenUtil.tokenValido(token.get())) {
-			response.getErrors().add("Token inválido ou expirado.");
+			response.getErrors().add("Token not found.");
+		} else if (!jwtTokenUtil.isTokenValid(token.get())) {
+			response.getErrors().add("Token expired or invalid.");
 		}
 		
 		if (!response.getErrors().isEmpty()) { 

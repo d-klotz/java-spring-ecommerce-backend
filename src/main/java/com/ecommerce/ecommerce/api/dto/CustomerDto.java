@@ -10,6 +10,7 @@ public class CustomerDto {
     private Optional<Long> id = Optional.empty();
     private String name;
     private String email;
+    private String password;
     private PaymentMethod mainPaymentMethod;
     private Profile profile;
 
@@ -51,5 +52,13 @@ public class CustomerDto {
 
     public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

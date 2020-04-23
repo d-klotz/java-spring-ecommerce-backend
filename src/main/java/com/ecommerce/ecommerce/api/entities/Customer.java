@@ -14,6 +14,7 @@ public class Customer {
     private Long id;
     private String name;
     private String email;
+    private String password;
     private Date creationDate;
     private Date lastUpdateDate;
     private Profile profile;
@@ -53,6 +54,15 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Column(name = "password", nullable = false)
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Column(name = "creation_date")

@@ -1,32 +1,31 @@
-package com.klotz.intelliponto.api.security.services;
+package com.ecommerce.ecommerce.api.security.services;
 
-import java.util.Optional;
-
+import com.ecommerce.ecommerce.api.entities.Customer;
+import com.ecommerce.ecommerce.api.security.JwtUserFactory;
+import com.ecommerce.ecommerce.api.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.klotz.intelliponto.api.entities.Funcionario;
-import com.klotz.intelliponto.api.security.JwtUserFactory;
-import com.klotz.intelliponto.api.services.FuncionarioService;
+import java.util.Optional;
 
 @Service
 public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	private FuncionarioService funcionarioService;
+	private CustomerService customerService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<Funcionario> funcionario = funcionarioService.buscarPorEmail(username);
+		Optional<Customer> customer = customerService.getCustomerByEmail(username);
 
-		if (funcionario.isPresent()) {
-			return JwtUserFactory.create(funcionario.get());
+		if (customer.isPresent()) {
+			return JwtUserFactory.create(customer.get());
 		}
 
-		throw new UsernameNotFoundException("Email não encontrado.");
+		throw new UsernameNotFoundException("No customer found with this email");
 	}
 
 }
