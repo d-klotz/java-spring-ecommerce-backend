@@ -13,6 +13,9 @@ public class CustomerDto {
     private String password;
     private PaymentMethod mainPaymentMethod;
     private Profile profile;
+    private String address;
+    private String complement;
+    private String number;
 
     public Optional<Long> getId() {
         return id;
@@ -60,5 +63,29 @@ public class CustomerDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public void setComplement(String complement) {
+        this.complement = complement;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

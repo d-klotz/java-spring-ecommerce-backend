@@ -20,6 +20,9 @@ public class Customer {
     private Profile profile;
     private PaymentMethod mainPaymentMethod;
     private List<Order> orders;
+    private String address;
+    private String complement;
+    private String number;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -114,4 +117,27 @@ public class Customer {
         this.mainPaymentMethod = mainPaymentMethod;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public void setComplement(String complement) {
+        this.complement = complement;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
 }
