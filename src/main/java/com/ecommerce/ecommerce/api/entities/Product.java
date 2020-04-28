@@ -1,8 +1,11 @@
 package com.ecommerce.ecommerce.api.entities;
 
+import com.ecommerce.ecommerce.api.enums.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +21,7 @@ public class Product {
     private String description;
     private String mainImage;
     private double price;
+    private Category category;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,4 +65,12 @@ public class Product {
         this.price = price;
     }
 
+    @Enumerated(EnumType.STRING)
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 }

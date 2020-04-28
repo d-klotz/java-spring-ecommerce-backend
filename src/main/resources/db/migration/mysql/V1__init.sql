@@ -5,7 +5,7 @@ CREATE TABLE `customer` (
   `password` varchar(255) NOT NULL,
   `address` varchar(255) NOT NULL,
   `number` varchar(255) NOT NULL,
-  `complement` varchar(255) NOT NULL,
+  `complement` varchar(255) DEFAULT NULL,
   `creation_date` datetime NOT NULL,
   `last_update_date` datetime NOT NULL,
   `profile` varchar(50) NOT NULL,
@@ -25,6 +25,7 @@ CREATE TABLE `product` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
+  `category` varchar(50) NOT NULL,
   `main_image` varchar(255) NOT NULL,
   `price` decimal(19,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

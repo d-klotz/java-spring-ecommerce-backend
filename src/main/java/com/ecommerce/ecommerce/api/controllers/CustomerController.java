@@ -54,6 +54,9 @@ public class CustomerController {
         customerDto.setName(customer.getName());
         customerDto.setProfile(customer.getProfile());
         customerDto.setMainPaymentMethod(customer.getMainPaymentMethod());
+        customerDto.setAddress(customer.getAddress());
+        customerDto.setNumber(customer.getNumber());
+        customerDto.setComplement(customer.getComplement());
         return customerDto;
     }
 
@@ -64,6 +67,9 @@ public class CustomerController {
         customer.setEmail(customerDto.getEmail());
         customer.setPassword(PasswordUtils.generateBCrypt(customerDto.getPassword()));
         customer.setMainPaymentMethod(customerDto.getMainPaymentMethod());
+        customer.setAddress(customerDto.getAddress());
+        customer.setNumber(customerDto.getNumber());
+        customer.setComplement(customerDto.getComplement());
         return customer;
     }
 

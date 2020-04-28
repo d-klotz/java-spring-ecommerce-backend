@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.api.controllers;
 
 import com.ecommerce.ecommerce.api.entities.Product;
+import com.ecommerce.ecommerce.api.enums.Category;
 import com.ecommerce.ecommerce.api.services.CustomerService;
 import com.ecommerce.ecommerce.api.services.ProductService;
 import org.slf4j.Logger;
@@ -46,6 +47,13 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProducts() {
         log.info("Getting all products");
         List<Product> products = this.productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping(value="/category/{category}")
+    public ResponseEntity<List<Product>>  getProductByCategory(@PathVariable Category category) {
+        log.info("Getting products by category {}", category);
+        List<Product> products = this.productService.getProductsByCategory(category);
         return ResponseEntity.ok(products);
     }
 }

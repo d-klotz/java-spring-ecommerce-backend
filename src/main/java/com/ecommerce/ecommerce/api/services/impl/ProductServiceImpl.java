@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.api.services.impl;
 
 import com.ecommerce.ecommerce.api.entities.Product;
+import com.ecommerce.ecommerce.api.enums.Category;
 import com.ecommerce.ecommerce.api.repository.ProductRepository;
 import com.ecommerce.ecommerce.api.services.CustomerService;
 import com.ecommerce.ecommerce.api.services.ProductService;
@@ -33,5 +34,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAllProducts() {
         return this.productRepository.findAll();
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(Category category) {
+        return this.productRepository.findByCategory(category);
     }
 }
