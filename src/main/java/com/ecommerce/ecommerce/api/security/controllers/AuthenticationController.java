@@ -1,9 +1,11 @@
 package com.ecommerce.ecommerce.api.security.controllers;
 
+import com.ecommerce.ecommerce.api.dto.CustomerDto;
+import com.ecommerce.ecommerce.api.entities.Customer;
 import com.ecommerce.ecommerce.api.response.Response;
 import com.ecommerce.ecommerce.api.security.dto.JwtAuthenticationDto;
-import com.ecommerce.ecommerce.api.security.dto.TokenDto;
 import com.ecommerce.ecommerce.api.security.utils.JwtTokenUtil;
+import com.ecommerce.ecommerce.api.services.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class AuthenticationController {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
+	private CustomerService customerService;
+
+	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
@@ -53,10 +58,10 @@ public class AuthenticationController {
 	 * @throws AuthenticationException
 	 */
 	@PostMapping
-	public ResponseEntity<Response<TokenDto>> gerarTokenJwt(
+	public ResponseEntity<Response<JwtAuthenticationDto>> gerarTokenJwt(
 			@Valid @RequestBody JwtAuthenticationDto authenticationDto, BindingResult result)
 			throws AuthenticationException {
-		Response<TokenDto> response = new Response<TokenDto>();
+		Response<JwtAuthenticationDto> response = new Response<>();
 
 		if (result.hasErrors()) {
 			log.error("Error found: {}", result.getAllErrors());
@@ -71,9 +76,13 @@ public class AuthenticationController {
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationDto.getEmail());
 		String token = jwtTokenUtil.getToken(userDetails);
-		response.setData(new TokenDto(token));
+		JwtAuthenticationDto user = new JwtAuthenticationDto();
+		user.setEmail(jwtTokenUtil.getUsernameFromToken(token));
+		user.setToken(token);
 
+			response.setData(user);
 		return ResponseEntity.ok(response);
+
 	}
 
 	/**
@@ -83,9 +92,9 @@ public class AuthenticationController {
 	 * @return ResponseEntity<Response<TokenDto>>
 	 */
 	@PostMapping(value = "/refresh")
-	public ResponseEntity<Response<TokenDto>> gerarRefreshTokenJwt(HttpServletRequest request) {
+	public ResponseEntity<Response<JwtAuthenticationDto>> gerarRefreshTokenJwt(HttpServletRequest request) {
 		log.info("Generating refresh JWT token.");
-		Response<TokenDto> response = new Response<TokenDto>();
+		Response<JwtAuthenticationDto> response = new Response<>();
 		Optional<String> token = Optional.ofNullable(request.getHeader(TOKEN_HEADER));
 		
 		if (token.isPresent() && token.get().startsWith(BEARER_PREFIX)) {
@@ -101,9 +110,23 @@ public class AuthenticationController {
 		if (!response.getErrors().isEmpty()) { 
 			return ResponseEntity.badRequest().body(response);
 		}
-		
-		String refreshedToken = jwtTokenUtil.refreshToken(token.get());
-		response.setData(new TokenDto(refreshedToken));
+		JwtAuthenticationDto user = new JwtAuthenticationDto();
+		user.setEmail(jwtTokenUtil.getUsernameFromToken(token.get()));
+		user.setToken(jwtTokenUtil.refreshToken(token.get()));
+		response.setData(user);
 		return ResponseEntity.ok(response);
+	}
+
+	private CustomerDto convertCustomerToCustomerDto(Customer customer) {
+		CustomerDto customerDto = new CustomerDto();
+		customerDto.setId(Optional.of(customer.getId()));
+		customerDto.setEmail(customer.getEmail());
+		customerDto.setName(customer.getName());
+		customerDto.setProfile(customer.getProfile());
+		customerDto.setMainPaymentMethod(customer.getMainPaymentMethod());
+		customerDto.setAddress(customer.getAddress());
+		customerDto.setNumber(customer.getNumber());
+		customerDto.setComplement(customer.getComplement());
+		return customerDto;
 	}
 }

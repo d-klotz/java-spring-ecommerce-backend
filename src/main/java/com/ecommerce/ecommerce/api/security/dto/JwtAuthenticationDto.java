@@ -4,6 +4,7 @@ public class JwtAuthenticationDto {
 	
 	private String email;
 	private String password;
+	private String token;
 
 	public JwtAuthenticationDto() {
 	}
@@ -24,9 +25,17 @@ public class JwtAuthenticationDto {
 		this.password = senha;
 	}
 
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	@Override
 	public String toString() {
-		return "JwtAuthenticationRequestDto [email=" + email + ", password=" + password + "]";
+		return "JwtAuthenticationRequestDto [email=" + email + ", password=" + password + ", token=" + token + "]";
 	}
 
 }

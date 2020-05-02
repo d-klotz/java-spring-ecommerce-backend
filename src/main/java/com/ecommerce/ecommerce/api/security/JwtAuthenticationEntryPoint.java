@@ -14,8 +14,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+		System.out.println(authException.getMessage());
+		if (authException.getMessage().equals("Bad credentials")) {
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+					"Your e-mail or password is not correct");
+		} else {
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
 				"Access denied. You have to be authenticated in order to access this URL");
+		}
 	}
 
 }
