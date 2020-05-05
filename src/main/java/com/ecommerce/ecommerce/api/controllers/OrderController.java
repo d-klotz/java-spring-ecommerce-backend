@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
-@RequestMapping("api/order")
+@RequestMapping("/api/order")
 @CrossOrigin(origins = "*")
 public class OrderController {
 

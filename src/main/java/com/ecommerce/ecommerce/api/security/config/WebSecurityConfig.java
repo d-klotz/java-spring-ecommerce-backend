@@ -2,9 +2,11 @@ package com.ecommerce.ecommerce.api.security.config;
 
 import com.ecommerce.ecommerce.api.security.JwtAuthenticationEntryPoint;
 import com.ecommerce.ecommerce.api.security.filters.JwtAuthenticationTokenFilter;
+import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -16,6 +18,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import sun.security.util.SecurityConstants;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -48,9 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
 				.and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and().cors()
 				.and().authorizeRequests()
-				.antMatchers("/auth/**", "/api/customer", "/api/product/**", "/v2/api-docs",
+				.antMatchers("/auth/**", "/api/customer/**", "/api/product/**", "/v2/api-docs",
 						"/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**")
 				.permitAll().anyRequest().authenticated();
 		httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
