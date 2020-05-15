@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce.api.dto;
 
+import com.ecommerce.ecommerce.api.enums.OrderStatus;
 import com.ecommerce.ecommerce.api.enums.PaymentMethod;
 import com.ecommerce.ecommerce.api.enums.ShippingMethod;
 
@@ -14,6 +15,8 @@ public class OrderDto {
     private List<OrderItemDto> orderItems;
     private PaymentMethod paymentMethod;
     private ShippingMethod shippingMethod;
+    private OrderStatus status;
+    private double totalAmount;
     private Optional<Date> creationDate = Optional.empty();
 
     public Optional<Long> getId() {
@@ -62,5 +65,21 @@ public class OrderDto {
 
     public void setCreationDate(Optional<Date> creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }

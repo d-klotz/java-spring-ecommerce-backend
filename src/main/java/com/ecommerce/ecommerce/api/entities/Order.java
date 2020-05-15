@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce.api.entities;
 
+import com.ecommerce.ecommerce.api.enums.OrderStatus;
 import com.ecommerce.ecommerce.api.enums.PaymentMethod;
 import com.ecommerce.ecommerce.api.enums.ShippingMethod;
 
@@ -17,6 +18,7 @@ public class Order {
     private PaymentMethod paymentMethod;
     private ShippingMethod shippingMethod;
     private double totalAmount;
+    private OrderStatus status;
     private Date creationDate;
 
     @Id
@@ -87,5 +89,13 @@ public class Order {
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }

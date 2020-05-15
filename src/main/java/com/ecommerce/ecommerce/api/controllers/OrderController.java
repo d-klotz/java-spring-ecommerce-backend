@@ -2,9 +2,12 @@ package com.ecommerce.ecommerce.api.controllers;
 
 import com.ecommerce.ecommerce.api.dto.OrderDto;
 import com.ecommerce.ecommerce.api.dto.OrderItemDto;
+import com.ecommerce.ecommerce.api.entities.Customer;
 import com.ecommerce.ecommerce.api.entities.Order;
 import com.ecommerce.ecommerce.api.entities.OrderItem;
 import com.ecommerce.ecommerce.api.entities.Product;
+import com.ecommerce.ecommerce.api.response.Response;
+import com.ecommerce.ecommerce.api.security.utils.JwtTokenUtil;
 import com.ecommerce.ecommerce.api.services.CustomerService;
 import com.ecommerce.ecommerce.api.services.OrderItemService;
 import com.ecommerce.ecommerce.api.services.OrderService;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +37,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class OrderController {
 
     private static Logger log = LoggerFactory.getLogger(CustomerService.class);
+    private static final String TOKEN_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
 
     @Autowired
     OrderService orderService;
@@ -46,6 +52,9 @@ public class OrderController {
     @Autowired
     OrderItemService orderItemService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     @PostMapping
     public ResponseEntity<OrderDto> createOrder(@Valid @RequestBody OrderDto orderDto) {
       log.info("Creating order {}", orderDto);
@@ -57,12 +66,33 @@ public class OrderController {
       return ResponseEntity.ok(createdOrderDto);
     }
 
-    @GetMapping(value="customer/{id}")
-    public ResponseEntity<List<OrderDto>> getOrdersByCustomerId(@PathVariable("id")  Long id) {
-        List<Order> orders = this.orderService.getOrdersByCustomerId(id);
+    @GetMapping()
+    public ResponseEntity<Response<List<OrderDto>>> getOrdersByCustomerId(HttpServletRequest request) {
+
+        Response<List<OrderDto>> response = new Response<>();
+        Optional<String> token = Optional.ofNullable(request.getHeader(TOKEN_HEADER));
+        if (token.isPresent() && token.get().startsWith(BEARER_PREFIX)) {
+            token = Optional.of(token.get().substring(7));
+        }
+
+        if (!token.isPresent()) {
+            response.getErrors().add("Token not found.");
+        } else if (!jwtTokenUtil.isTokenValid(token.get())) {
+            response.getErrors().add("Token expired or invalid.");
+        }
+
+        if (!response.getErrors().isEmpty()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Optional<Customer> customer = this.customerService
+                .getCustomerByEmail(jwtTokenUtil.getUsernameFromToken(token.get()));
+
+        List<Order> orders = this.orderService.getOrdersByCustomerId(customer.get().getId());
         List<OrderDto> orderDtos = new ArrayList<>();
         orders.forEach(order -> orderDtos.add(convertoOrderToOrderDto(order)));
-        return ResponseEntity.ok(orderDtos);
+        response.setData(orderDtos);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(value="/{id}")
@@ -88,6 +118,8 @@ public class OrderController {
         orderDto.setOrderItems(convertoOrderItemToOrderItemDto(order.getOrderItem()));
         orderDto.setPaymentMethod(order.getPaymentMethod());
         orderDto.setShippingMethod(order.getShippingMethod());
+        orderDto.setStatus(order.getStatus());
+        orderDto.setTotalAmount(order.getTotalAmount());
         orderDto.setCreationDate(Optional.of(order.getCreationDate()));
         return orderDto;
     }
@@ -109,6 +141,7 @@ public class OrderController {
         order.setCustomer(customerService.getCustomerById(orderDto.getCustomerId()));
         order.setShippingMethod(orderDto.getShippingMethod());
         order.setPaymentMethod(orderDto.getPaymentMethod());
+        order.setStatus((orderDto.getStatus()));
         order.setOrderItem(convertOrderItemsDtoToOrdemItems(orderDto.getOrderItems(), order));
         return order;
     }

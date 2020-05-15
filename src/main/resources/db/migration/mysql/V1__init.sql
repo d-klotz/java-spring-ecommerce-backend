@@ -18,7 +18,8 @@ CREATE TABLE `orders` (
   `shipping_method` varchar(50) NOT NULL,
   `creation_date` datetime NOT NULL,
   `total_amount` decimal(19,2) NOT NULL,
-  `payment_method` varchar(50) NOT NULL
+  `payment_method` varchar(50) NOT NULL,
+  `status` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `product` (
