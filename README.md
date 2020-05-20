@@ -7,13 +7,18 @@
 - Docker
 
 # :closed_lock_with_key: Initital Instructions
-
-First get all the requirements installed on your system.
+### Installing MySql Container
 In order to run the project, you will need a [MySQl docker container](https://hub.docker.com/_/mysql) running.
-After having it running, include the Mysql connection url, user and password in the [application.properties](https://github.com/d-klotz/java-spring-ecommerce-backend/blob/master/src/main/resources/application.properties) file.
+
+```shell
+# Download and run mysql
+$ docker run -p 33061:3306 --name ecommerce -e MYSQL_ROOT_PASSWORD=root -d mysql:latest
+```
+
+If you change MySQL port or root password, you have to change it in the [application.properties](https://github.com/d-klotz/java-spring-ecommerce-backend/blob/master/src/main/resources/application.properties) file.
 
 
-
+# :zap: Running the Application
 ### Getting started the API Restful backend
 
 Clone this repository and install all dependencies.
