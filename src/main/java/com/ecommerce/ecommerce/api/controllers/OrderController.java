@@ -96,10 +96,12 @@ public class OrderController {
     }
 
     @GetMapping(value="/{id}")
-    public ResponseEntity<OrderDto> getOrdersById(@PathVariable("id")  Long id) {
+    public ResponseEntity<Response<OrderDto>> getOrdersById(@PathVariable("id")  Long id) {
+        Response<OrderDto> response = new Response<>();
         Order order = this.orderService.getOrderById(id);
         OrderDto orderDto = convertoOrderToOrderDto(order);
-        return ResponseEntity.ok(orderDto);
+        response.setData(orderDto);
+        return ResponseEntity.ok(response);
     }
 
     private double calculateTotalAmount(OrderDto orderDto) {
